@@ -21,5 +21,8 @@ class ChatViewController: UIViewController {
     @IBAction func sendPressed(_ sender: UIButton) {
     }
     
-
+    @IBAction func logOutPressed(_ sender: UIBarButtonItem) {
+        
+    }
+    
 }
