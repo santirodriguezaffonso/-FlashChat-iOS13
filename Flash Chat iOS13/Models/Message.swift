@@ -1,0 +1,14 @@
+//
+//  Message.swift
+//  Flash Chat iOS13
+//
+//  Created by Santiago Rodriguez Affonso on 11/04/2022.
+//  Copyright © 2022 Angela Yu. All rights reserved.
+//
+
+import Foundation
+
+struct Message {
+    let send: String
+    let body: String
+}
