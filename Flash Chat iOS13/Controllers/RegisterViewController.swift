@@ -24,7 +24,7 @@ class RegisterViewController: UIViewController {
                 if let e = error {
                     print(e.localizedDescription) //This code will show a descrtipion of the Error and "localized" will put in user's language selected in iPhone
                 } else {
-                    self.performSegue(withIdentifier: "RegisterToChat", sender: self)
+                    self.performSegue(withIdentifier: K.registerSegue, sender: self)
                 }
             }
         }
