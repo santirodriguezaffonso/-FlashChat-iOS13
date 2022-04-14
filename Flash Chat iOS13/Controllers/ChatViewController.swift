@@ -24,12 +24,38 @@ class ChatViewController: UIViewController {
         navigationItem.hidesBackButton = true
         
         setUpTable()
+        loadMessages()
+    }
+    
+    func loadMessages() {
+        db.collection(K.FStore.collectionName).order(by: K.FStore.dateField).addSnapshotListener { (querySnapshot, error) in
+            
+            self.messages = []
+            
+            if let e = error {
+                print("Error retreiving Messages, \(e)")
+            } else {
+                if let snapshotDocuments = querySnapshot?.documents {
+                    for doc in snapshotDocuments {
+                         let data = doc.data()
+                        if let messageSender = data[K.FStore.senderField] as? String, let messaBody = data[K.FStore.bodyField] as? String {
+                             let newMessage = Message(sender: messageSender, body: messaBody)
+                            self.messages.append(newMessage)
+                            
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
     @IBAction func sendPressed(_ sender: UIButton) {
         
         if let messageBody = messageTextfield.text, let messageSender = Auth.auth().currentUser?.email {
-            db.collection(K.FStore.collectionName).addDocument(data: [K.FStore.senderField : messageSender, K.FStore.bodyField : messageBody]) { (error) in
+            db.collection(K.FStore.collectionName).addDocument(data: [K.FStore.senderField : messageSender, K.FStore.bodyField : messageBody, K.FStore.dateField : Date().timeIntervalSince1970]) { (error) in
                 if let e = error {
                     print("There was an issue saving data to Firestore, \(e)")
                 } else {
@@ -37,6 +63,7 @@ class ChatViewController: UIViewController {
                 }
             }
         }
+        self.messageTextfield.text = ""
     }
     
     @IBAction func logOutPressed(_ sender: UIBarButtonItem) {
